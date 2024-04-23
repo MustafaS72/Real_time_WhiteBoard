@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import "./index.css";
 import { useNavigate } from "react-router-dom";
-import { FaCopy } from "react-icons/fa";
+import { FaCopy, FaCheckCircle } from "react-icons/fa";
 const CreateRoomForm = ({ uuid, socket, setuser }) => {
   const [roomId, setRoomId] = useState(uuid());
   const [name, setName] = useState("");
+  const [isCopied, setIsCopied] = useState(false);
   const navigate = useNavigate();
   const handleCreateRoom = (e) => {
     e.preventDefault();
+    console.log("handlecreat");
     const roomData = {
       name,
       roomId,
@@ -20,8 +22,14 @@ const CreateRoomForm = ({ uuid, socket, setuser }) => {
     console.log(roomData);
     socket.emit("userJoined", roomData);
   };
+  const handleCopyRoomId = () => {
+    setIsCopied(true);
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 1000);
+    navigator.clipboard.writeText(roomId);
+  };
 
-  //console.log("uid", uuid());
   return (
     <form className="form col-md-12 mt-5">
       <div className="form-group">
@@ -43,8 +51,13 @@ const CreateRoomForm = ({ uuid, socket, setuser }) => {
             placeholder="Generate Room code"
           />
           <div className="input-group-append">
-            <button className="me-2" style={{ border: "none" }} type="button">
-              <FaCopy />
+            <button
+              className="me-2 ml-2"
+              style={{ border: "none" }}
+              type="button"
+              onClick={handleCopyRoomId}
+            >
+              {!isCopied ? <FaCopy /> : <FaCheckCircle />}
             </button>
           </div>
         </div>
