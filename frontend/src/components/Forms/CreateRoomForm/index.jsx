@@ -2,13 +2,23 @@ import React, { useState } from "react";
 import "./index.css";
 import { useNavigate } from "react-router-dom";
 import { FaCopy, FaCheckCircle } from "react-icons/fa";
+import { toast } from "react-hot-toast";
+
 const CreateRoomForm = ({ uuid, socket, setuser }) => {
   const [roomId, setRoomId] = useState(uuid());
   const [name, setName] = useState("");
   const [isCopied, setIsCopied] = useState(false);
+
   const navigate = useNavigate();
   const handleCreateRoom = (e) => {
     e.preventDefault();
+    if (name.length === 0) {
+      toast.error("Please enter name");
+      return;
+    } else if (name.length < 3) {
+      toast.error("name should have atleast 3 characters");
+      return;
+    }
     console.log("handlecreat");
     const roomData = {
       name,
