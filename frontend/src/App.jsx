@@ -5,7 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import io from "socket.io-client"
 import RoomPage from './Pages/RoomPage';
 
-const server="http://localhost:3000";
+const server="http://localhost:5000";
 const connectionOptions={
   "force new connection":true,
   reconnectionAttempts:"Infinity",

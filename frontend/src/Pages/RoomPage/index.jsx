@@ -50,7 +50,7 @@ const RoomPage=({user,socket,users})=>{
    }
   return(
    <div className="row">
-    <button type="button" className="button-35"
+    {/* <button type="button" className="button-35"
     style={{
       display:"block",
       position:"absolute",
@@ -61,29 +61,52 @@ const RoomPage=({user,socket,users})=>{
       padding:"1px"
     }}
     onClick={()=>setOpenedUserTab(true)}
-    >Users</button>
+    >Users</button> */}
+   
+  <button className="button-35" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+  style={{
+     display:"block",
+     position:"absolute",
+     top:"5%",
+    left:"2%",
+     height:"40px",
+     width:"100px",
+     padding:"1px",
+  }}
+  onClick={()=>setOpenedUserTab(true)}>
+    Users
+  </button>
+  
     {
       openedUserTab && (
         <div
-        className="position-fixed top-0 h-100 text-white bg-dark"
-        style={{width:"200px",left:"0%"}}
+        className="position-fixed top-5 h-100 text-white bg-dark mr-10 rounded-top"
+        style={{width:"185px",left:"0%"}}
         >
           <button type="button" className="btn btn-light btn-block w-100 mt-5" onClick={()=>setOpenedUserTab(false)}>Close</button>
-          <div className="w-100 mt-5 pt-5">
+          <div className="w-90 mt-5 pt-5 ">
           {
             users.map((usr,index)=>(
-              <p key={index*999} className="my-2 w-100 text-center">{usr.name} {user && user.userId===usr.userId && "(You)"}</p>
+              <p key={index*999} className="my-2 w-100 text-center ">{usr.name} {user && user.userId===usr.userId && "(You)"}</p>
             ))
           }
           </div>
           
-        </div>
-      )
+         </div>
+        // <ul className="dropdown-menu">
+        //   {
+        //   users.map((usr,index)=>(
+        // <li><button className="dropdown-item" type="button" key={index*999} >{usr.name} {user && user.userId===usr.userId && "(You)"}</button>
+        // </li>
+        //   ))
+        //   }
+        //  </ul>
+        )
     }
     <h1 className="text-center py-4 ">CollaborateBoard <span className="text-primary">[Users Online:{users.length}]</span></h1>
     {
       user && user.presenter && (
-        <div className="col-md-10 mx-auto px-5 mb-3 d-flex align-items-center justify-content-around">
+        <div className="col-md-9 mx-auto px-5 mb-3 d-flex align-items-center justify-content-around">
       <div className="d-flex col-md-2 justify-content-center gap-1">
         <div className="d-flex gap-1">
              <label htmlFor="pencil">Pencil</label>
@@ -121,7 +144,7 @@ const RoomPage=({user,socket,users})=>{
         />
         </div>
       </div>
-      <div className="col-md-3 mx-auto">
+      <div className="col-md-2 mx-auto">
          <div className="d-flex align-items-center justify-content-center">
           <label htmlFor="color">Select Color:</label>
           <input
@@ -146,7 +169,7 @@ const RoomPage=({user,socket,users})=>{
       )
     }
     
-    <div className="col-md-10 mx-auto mt-4 canvas-box">
+    <div className="col-md-9 mx-auto mt-3 canvas-box">
       <Whiteboard 
       canvasRef={canvasRef} 
       ctxRef={ctxRef}
