@@ -1,65 +1,98 @@
 import { useEffect, useRef, useState } from "react";
+import { IoCloseSharp } from "react-icons/io5";
+import { LuSend } from "react-icons/lu";
 
-const Chat = ({setOpenedChatTab,socket}) => {
-  const[chat,setChat]=useState([])
-  const [message,setMessage]=useState("");
+const Chat = ({ setOpenedChatTab, socket }) => {
+  const [chat, setChat] = useState([]);
+  const [message, setMessage] = useState("");
 
-
-  useEffect(()=>{
-    socket.on("messageResponsesent",(data)=>{
+  useEffect(() => {
+    socket.on("messageResponsesent", (data) => {
       //alert("jisna mess bheja uska nmae")
-     // console.log("jisna mess bheja uska nmae",data.name)
-      setChat((prevChats)=>[...prevChats,data]);
+      // console.log("jisna mess bheja uska nmae",data.name)
+      setChat((prevChats) => [...prevChats, data]);
       //console.log(chat);
-    })
-  },[])
+    });
+  }, []);
 
-  const handlesubmit=(e)=>{
+  const handlesubmit = (e) => {
     // alert("yha agya he")
     e.preventDefault();
-    if(message.trim()!== ""){
+    if (message.trim() !== "") {
       // alert("2 tak aya")
       console.log(message);
-      setChat((prevChats)=>[...prevChats,{message,name:"You"}])
-      socket.emit("message",{message})
-      setMessage("")
+      setChat((prevChats) => [...prevChats, { message, name: "You" }]);
+      socket.emit("message", { message });
+      setMessage("");
       //console.log(message);
-      
+
       //setChat((prevChats)=>[...prevChats,{message,name:"You"}])
     }
-    
-  }
+  };
   return (
     <div
-        className="position-fixed top-5 h-100 text-white bg-dark mr-10 rounded-top"
-        style={{width:"250px",left:"0%"}}
-        >
-          <button type="button" className="btn btn-light btn-block w-100 mt-5" onClick={()=>setOpenedChatTab(false)}>Close</button>
-          <div className="w-90 mt-5 p-2 border border-1 border-white rounded-3" style={{height:"70%"}}>
-          {
-            chat.map((msg, index) => {
-              return (
-                <p key={index * 999} className="my-2 text-center w-100 py-2 border border-left-0 border-right-0">
-                  {msg.name}: {msg.message}
-                </p>
-              );
-            })
-          }
-          </div  >
-         <form  onSubmit={handlesubmit} className="w-90 mt-4 d-flex rounded-3">
-         <input type="text" placeholder="Enter message" className="h-100 border-0 rounded-0 py-2 px-4"
-         style={{
-          width:"90%",
-         }}
-           value={message}
-           onChange={(e)=>setMessage(e.target.value)}
-         />
-         <button type="submit" className="btn btn-success rounded-0">
-          Send
-         </button>
-         </form>
-     </div>
+      className="position-fixed top-5 h-100 text-white bg-dark mr-10 rounded-top"
+      style={{ width: "320px", right: "0%" }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          width: "100%",
+          marginTop: "15px",
+        }}
+      >
+        <div>
+          <h5>Group Chats</h5>
+        </div>
+        <div>
+          <IoCloseSharp
+            onClick={() => setOpenedChatTab(false)}
+            style={{ fontSize: "24px", cursor: "pointer" }}
+          />
+        </div>
+      </div>
+
+      <div
+        className="w-90 mt-2 p-2  rounded-3"
+        style={{ height: "85%", overflowY: "scroll" }}
+      >
+        {chat.map((msg, index) => {
+          return (
+            <div
+              style={{
+                display: "flex",
+                textAlign: msg.name == "You" ? "right" : "left",
+                width: "100%",
+                padding: "0 5px",
+              }}
+              key={index}
+            >
+              <p className={`my-2 w-100 py-2`} style={{}}>
+                <h5>{msg.name}</h5>
+                {msg.message}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+      <form onSubmit={handlesubmit} className="w-90 mt-4 d-flex rounded-3">
+        <input
+          type="text"
+          placeholder="Enter message"
+          className="h-100 border-0 rounded-0 py-2 px-4"
+          style={{
+            width: "90%",
+          }}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+        <button type="submit" className="btn btn-primary rounded-0">
+          <LuSend />
+        </button>
+      </form>
+    </div>
   );
-}
+};
 
 export default Chat;

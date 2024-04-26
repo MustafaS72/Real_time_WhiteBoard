@@ -1,20 +1,24 @@
 import "./index.css";
-import React, { useState,useRef, useEffect }from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Whiteboard from "../../components/Whiteboard";
 import Chat from "../../components/ChatBar";
-const RoomPage=({user,socket,users})=>{
-   const canvasRef=useRef(null);
-   const ctxRef=useRef(null);
+import Header from "../../components/Forms/Header";
+import Users from "../../components/allUser/Users";
+
+const RoomPage = ({ user, socket, users }) => {
+  const canvasRef = useRef(null);
+  const ctxRef = useRef(null);
 
   const [tool, setTool] = useState("pencil");
   const [color, setColor] = useState("#000000");
-  const[elements,setElements]=useState([])
-  const [history, setHistory] = useState([]); 
-  const[openedUserTab,setOpenedUserTab]=useState(false);
-  const[openedChatTab,setOpenedChatTab]=useState(false);
+  const [elements, setElements] = useState([]);
+  const [history, setHistory] = useState([]);
+  const [openedUserTab, setOpenedUserTab] = useState(false);
+  const [openedChatTab, setOpenedChatTab] = useState(false);
+
   useEffect(() => {
     return () => {
-      socket.emit("userLeft",user)
+      socket.emit("userLeft", user);
     };
   }, []);
 
@@ -24,7 +28,7 @@ const RoomPage=({user,socket,users})=>{
       elements[elements.length - 1],
     ]);
     setElements((prevElements) =>
-      prevElements.slice(0,prevElements.length-1)
+      prevElements.slice(0, prevElements.length - 1)
     );
   };
 
@@ -33,26 +37,24 @@ const RoomPage=({user,socket,users})=>{
       ...prevElements,
       history[history.length - 1],
     ]);
-    setHistory((prevHistory) =>
-      prevHistory.slice(0,prevHistory.length-1)
-    );
+    setHistory((prevHistory) => prevHistory.slice(0, prevHistory.length - 1));
   };
-   const handleClearCanvas=()=>{
-   const canvas=canvasRef.current;
-   const ctx = canvas.getContext("2d");
-   ctx.fillRect="white";
-   ctxRef.current.clearRect(
-    0,
-    0,
-    canvasRef.current.width,
-    canvasRef.current.height
-  );
-   setElements([]);
-   }
-  return(
-   <div className="row">
-    {/* <button type="button" className="button-35"
-    style={{
+  const handleClearCanvas = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    ctx.fillRect = "white";
+    ctxRef.current.clearRect(
+      0,
+      0,
+      canvasRef.current.width,
+      canvasRef.current.height
+    );
+    setElements([]);
+  };
+  return (
+    <div className="row">
+      {/* <button type="button" className="button-35"
+     style={{
       display:"block",
       position:"absolute",
       top:"5%",
@@ -60,152 +62,149 @@ const RoomPage=({user,socket,users})=>{
       height:"40px",
       width:"100px",
       padding:"1px"
-    }}
+     }}
     onClick={()=>setOpenedUserTab(true)}
     >Users</button> */}
-   
-  <button className="button-35" type="button"
-  style={{
-     display:"block",
-     position:"absolute",
-     top:"5%",
-    left:"2%",
-     height:"40px",
-     width:"100px",
-     padding:"1px",
-  }}
-  onClick={()=>setOpenedUserTab(true)}>
-    Users
-  </button>
+      <Header />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          position: "absolute",
+          top: "3%",
+        }}
+      >
+        <div>
+          <button
+            className="button-35"
+            type="button"
+            style={{
+              height: "40px",
+              width: "100px",
+              padding: "1px",
+              margin: "10px",
+            }}
+            onClick={() => setOpenedUserTab(true)}
+          >
+            Users
+          </button>
 
-  <button className="button-35" type="button"
-  style={{
-     display:"block",
-     position:"absolute",
-     top:"5%",
-    left:"10%",
-     height:"40px",
-     width:"100px",
-     padding:"1px",
-  }}
-  onClick={()=>setOpenedChatTab(true)}>
-    Chats
-  </button>
-  
-    {
-      openedUserTab && (
-        <div
-        className="position-fixed top-5 h-100 text-white bg-dark mr-10 rounded-top"
-        style={{width:"189px",left:"0%"}}
-        >
-          <button type="button" className="btn btn-light btn-block w-100 mt-5" onClick={()=>setOpenedUserTab(false)}>Close</button>
-          <div className="w-90 mt-5 pt-5 ">
-          {
-            users.map((usr,index)=>(
-              <p key={index*999} className="my-2 w-100 text-center ">{usr.name} {user && user.userId===usr.userId && "(You)"}</p>
-            ))
-          }
-          </div>
-          
-         </div>
-        // <ul className="dropdown-menu">
-        //   {
-        //   users.map((usr,index)=>(
-        // <li><button className="dropdown-item" type="button" key={index*999} >{usr.name} {user && user.userId===usr.userId && "(You)"}</button>
-        // </li>
-        //   ))
-        //   }
-        //  </ul>
-        )
-    }
+          <button
+            className="button-35"
+            type="button"
+            style={{
+              height: "40px",
+              width: "100px",
+              padding: "1px",
+            }}
+            onClick={() => setOpenedChatTab(true)}
+          >
+            Chats
+          </button>
+        </div>
+      </div>
 
-    {
-      openedChatTab && (
-        <Chat setOpenedChatTab={setOpenedChatTab} socket={socket}/> 
-      )
-    }
-    <h1 className="text-center py-4 ">CollaborateBoard <span className="text-primary">[Users Online:{users.length}]</span></h1>
-    {
-      user && user.presenter && (
+      {openedUserTab && (
+        <Users users={users} setOpenedUserTab={setOpenedUserTab} />
+      )}
+
+      {openedChatTab && (
+        <Chat setOpenedChatTab={setOpenedChatTab} socket={socket} />
+      )}
+      {/* <h1 className="text-center py-4 ">CollaborateBoard <span className="text-primary">[Users Online:{users.length}]</span></h1> */}
+
+      {user && user.presenter && (
         <div className="col-md-9 mx-auto px-5 mb-3 d-flex align-items-center justify-content-around">
-      <div className="d-flex col-md-2 justify-content-center gap-1">
-        <div className="d-flex gap-1">
-             <label htmlFor="pencil">Pencil</label>
-        <input
-        type="radio"
-        name="tool"
-        value="pencil"
-        id="pencil"
-        checked={tool === "pencil"}
-        onChange={(e) => setTool(e.target.value)}
-        />
-        </div>
+          <div className="d-flex col-md-2 justify-content-center gap-1">
+            <div className="d-flex gap-1">
+              <label htmlFor="pencil">Pencil</label>
+              <input
+                type="radio"
+                name="tool"
+                value="pencil"
+                id="pencil"
+                checked={tool === "pencil"}
+                onChange={(e) => setTool(e.target.value)}
+              />
+            </div>
 
-        <div className="d-flex gap-1">
-             <label htmlFor="line">Line</label>
-        <input
-        type="radio"
-        name="tool"
-        value="line"
-        id="line"
-        checked={tool === "line"}
-        onChange={(e) => setTool(e.target.value)}
-        />
-        </div>
-        
-        <div className="d-flex gap-1">
-             <label htmlFor="rect">Rectangle</label>
-        <input
-        type="radio"
-        name="tool"
-        value="rect"
-        id="rect"
-        checked={tool === "rect"}
-        onChange={(e) => setTool(e.target.value)}
-        />
-        </div>
-      </div>
-      <div className="col-md-2 mx-auto">
-         <div className="d-flex align-items-center justify-content-center">
-          <label htmlFor="color">Select Color:</label>
-          <input
-          type="color"
-          id="color"
-          className="mt-1 ms-3"
-          value={color}
-          onChange={(e)=>setColor(e.target.value)}
-          />
-         </div>
-      </div>
+            <div className="d-flex gap-1">
+              <label htmlFor="line">Line</label>
+              <input
+                type="radio"
+                name="tool"
+                value="line"
+                id="line"
+                checked={tool === "line"}
+                onChange={(e) => setTool(e.target.value)}
+              />
+            </div>
 
-      <div className="col-md-3 d-flex gap-2">
-        <button className="btn btn-primary mt-1"   disabled={elements.length === 0} onClick={() => undo()}>Undo</button>
-        <button className="btn btn-outline-primary mt-1"  disabled={history.length < 1}  onClick={() => redo()}>Redo</button>
-      </div>
+            <div className="d-flex gap-1">
+              <label htmlFor="rect">Rectangle</label>
+              <input
+                type="radio"
+                name="tool"
+                value="rect"
+                id="rect"
+                checked={tool === "rect"}
+                onChange={(e) => setTool(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="col-md-2 mx-auto">
+            <div className="d-flex align-items-center justify-content-center">
+              <label htmlFor="color">Select Color:</label>
+              <input
+                type="color"
+                id="color"
+                className="mt-1 ms-3"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+              />
+            </div>
+          </div>
 
-      <div className="col-md-2">
-          <button className="btn btn-danger" onClick={handleClearCanvas}>Clear Canvas</button>
+          <div className="col-md-3 d-flex gap-2">
+            <button
+              className="btn btn-primary mt-1"
+              disabled={elements.length === 0}
+              onClick={() => undo()}
+            >
+              Undo
+            </button>
+            <button
+              className="btn btn-outline-primary mt-1"
+              disabled={history.length < 1}
+              onClick={() => redo()}
+            >
+              Redo
+            </button>
+          </div>
+
+          <div className="col-md-2">
+            <button className="btn btn-danger" onClick={handleClearCanvas}>
+              Clear Canvas
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="col-md-9 mx-auto mt-3 canvas-box">
+        <Whiteboard
+          canvasRef={canvasRef}
+          ctxRef={ctxRef}
+          elements={elements}
+          setElements={setElements}
+          tool={tool}
+          color={color}
+          user={user}
+          socket={socket}
+        />
       </div>
     </div>
-      )
-    }
-    
-    <div className="col-md-9 mx-auto mt-3 canvas-box">
-      <Whiteboard 
-      canvasRef={canvasRef} 
-      ctxRef={ctxRef}
-      elements={elements}
-      setElements={setElements}
-      tool={tool}
-      color={color}
-      user={user}
-      socket={socket}
-      />
-    </div>
-   </div>
   );
-}
+};
 export default RoomPage;
-
 
 /* CSS */
