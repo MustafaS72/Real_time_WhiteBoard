@@ -1,6 +1,7 @@
 import "./index.css";
 import React, { useState,useRef, useEffect }from "react";
 import Whiteboard from "../../components/Whiteboard";
+import Chat from "../../components/ChatBar";
 const RoomPage=({user,socket,users})=>{
    const canvasRef=useRef(null);
    const ctxRef=useRef(null);
@@ -10,7 +11,7 @@ const RoomPage=({user,socket,users})=>{
   const[elements,setElements]=useState([])
   const [history, setHistory] = useState([]); 
   const[openedUserTab,setOpenedUserTab]=useState(false);
-
+  const[openedChatTab,setOpenedChatTab]=useState(false);
   useEffect(() => {
     return () => {
       socket.emit("userLeft",user)
@@ -63,7 +64,7 @@ const RoomPage=({user,socket,users})=>{
     onClick={()=>setOpenedUserTab(true)}
     >Users</button> */}
    
-  <button className="button-35" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+  <button className="button-35" type="button"
   style={{
      display:"block",
      position:"absolute",
@@ -76,12 +77,26 @@ const RoomPage=({user,socket,users})=>{
   onClick={()=>setOpenedUserTab(true)}>
     Users
   </button>
+
+  <button className="button-35" type="button"
+  style={{
+     display:"block",
+     position:"absolute",
+     top:"5%",
+    left:"10%",
+     height:"40px",
+     width:"100px",
+     padding:"1px",
+  }}
+  onClick={()=>setOpenedChatTab(true)}>
+    Chats
+  </button>
   
     {
       openedUserTab && (
         <div
         className="position-fixed top-5 h-100 text-white bg-dark mr-10 rounded-top"
-        style={{width:"185px",left:"0%"}}
+        style={{width:"189px",left:"0%"}}
         >
           <button type="button" className="btn btn-light btn-block w-100 mt-5" onClick={()=>setOpenedUserTab(false)}>Close</button>
           <div className="w-90 mt-5 pt-5 ">
@@ -102,6 +117,12 @@ const RoomPage=({user,socket,users})=>{
         //   }
         //  </ul>
         )
+    }
+
+    {
+      openedChatTab && (
+        <Chat setOpenedChatTab={setOpenedChatTab} socket={socket}/> 
+      )
     }
     <h1 className="text-center py-4 ">CollaborateBoard <span className="text-primary">[Users Online:{users.length}]</span></h1>
     {

@@ -35,9 +35,19 @@ io.on("connection",(socket)=>{
   });
   //console.log(socket.id);
 
+  socket.on("message",(data)=>{
+    const{message}=data
+    const user=getUser(socket.id)
+    console.log(data);
+    console.log(user)
+    if(user){
+      console.log("ys user he")
+      socket.broadcast.to(roomIdGlobal).emit("messageResponsesent", {message,name:user.name});
+    }
+  })
+
   socket.on("disconnect",()=>{
     const user=getUser(socket.id)
-    //console.log(data);
     if(user){
       const removedUser=removeUser(socket.id)
       socket.broadcast.to(roomIdGlobal).emit("userLeftMessageBroadcasted",user.name);
