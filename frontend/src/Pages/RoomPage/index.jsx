@@ -98,6 +98,8 @@ const RoomPage = ({ user, socket, users }) => {
       <Modal
         showUserModal={showUserModal}
         setShowUserModal={setShowUserModal}
+        users={users}
+        user={user}
       />
 
       {openedUserTab && (

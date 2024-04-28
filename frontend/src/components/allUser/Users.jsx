@@ -1,6 +1,6 @@
 import React from "react";
 
-const Users = ({ users, setOpenedUserTab,user }) => {
+const Users = ({ users, setOpenedUserTab, user }) => {
   return (
     <div
       className="position-fixed top-5 h-100 text-white bg-dark mr-10 rounded-top"
