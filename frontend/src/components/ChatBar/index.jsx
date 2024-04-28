@@ -1,11 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import { LuSend } from "react-icons/lu";
 
 const Chat = ({ setOpenedChatTab, socket }) => {
-  const [chat, setChat] = useState([]);
-  const [message, setMessage] = useState("");
-
+  const [chat, setChat] = useState(() => {
+    const storedChats = localStorage.getItem("chats");
+    return storedChats ? JSON.parse(storedChats) : [];
+  });  const [message, setMessage] = useState("");
+  console.log("local storage", localStorage.getItem("chats"));
+  console.log("chat", chat);
+  
+console.log("Chat component");
   useEffect(() => {
     socket.on("messageResponsesent", (data) => {
       //alert("jisna mess bheja uska nmae")
@@ -16,19 +21,17 @@ const Chat = ({ setOpenedChatTab, socket }) => {
   }, []);
 
   const handlesubmit = (e) => {
-    // alert("yha agya he")
     e.preventDefault();
     if (message.trim() !== "") {
-      // alert("2 tak aya")
-      console.log(message);
-      setChat((prevChats) => [...prevChats, { message, name: "You" }]);
-      socket.emit("message", { message });
-      setMessage("");
-      //console.log(message);
-
-      //setChat((prevChats)=>[...prevChats,{message,name:"You"}])
+      const newMessage = { message, name: "You" }; // Create message object
+      setChat((prevChats) => [...prevChats, newMessage]); // Update chat state
+      localStorage.setItem("chats", JSON.stringify([...chat, newMessage])); // Store in local storage
+      socket.emit("message", newMessage); // Emit message to socket server
+      setMessage(""); // Clear message input
     }
   };
+
+  
   return (
     <div
       className="position-fixed top-5 h-100 text-white bg-dark mr-10 rounded-top"
@@ -95,4 +98,4 @@ const Chat = ({ setOpenedChatTab, socket }) => {
   );
 };
 
-export default Chat;
+export default memo(Chat);

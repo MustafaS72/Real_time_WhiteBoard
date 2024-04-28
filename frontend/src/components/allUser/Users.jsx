@@ -1,6 +1,6 @@
 import React from "react";
 
-const Users = ({ users, setOpenedUserTab }) => {
+const Users = ({ users, setOpenedUserTab,user }) => {
   return (
     <div
       className="position-fixed top-5 h-100 text-white bg-dark mr-10 rounded-top"
@@ -14,9 +14,9 @@ const Users = ({ users, setOpenedUserTab }) => {
         Close
       </button>
       <div className="w-90 mt-5 pt-5">
-        {users.map((user, index) => (
+        {users.map((usr, index) => (
           <p key={index * 999} className="my-2 w-100 text-center ">
-            {user.name} {user && user.userId === user.userId && "(You)"}
+            {usr.name} {user && user.userId === usr.userId && "(You)"}
           </p>
         ))}
       </div>

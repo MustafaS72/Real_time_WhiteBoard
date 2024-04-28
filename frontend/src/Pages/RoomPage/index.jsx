@@ -105,7 +105,7 @@ const RoomPage = ({ user, socket, users }) => {
       </div>
 
       {openedUserTab && (
-        <Users users={users} setOpenedUserTab={setOpenedUserTab} />
+        <Users users={users} setOpenedUserTab={setOpenedUserTab} user={user}/>
       )}
 
       {openedChatTab && (
