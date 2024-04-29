@@ -4,6 +4,7 @@ import Whiteboard from "../../components/Whiteboard";
 import Chat from "../../components/ChatBar";
 import Header from "../../components/Forms/Header";
 import Users from "../../components/allUser/Users";
+import Modal from "../../components/modal/Modal";
 
 const RoomPage = ({ user, socket, users }) => {
   const canvasRef = useRef(null);
@@ -15,6 +16,7 @@ const RoomPage = ({ user, socket, users }) => {
   const [history, setHistory] = useState([]);
   const [openedUserTab, setOpenedUserTab] = useState(false);
   const [openedChatTab, setOpenedChatTab] = useState(false);
+  const [showUserModal, setShowUserModal] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -53,18 +55,6 @@ const RoomPage = ({ user, socket, users }) => {
   };
   return (
     <div className="row">
-      {/* <button type="button" className="button-35"
-     style={{
-      display:"block",
-      position:"absolute",
-      top:"5%",
-      left:"5%",
-      height:"40px",
-      width:"100px",
-      padding:"1px"
-     }}
-    onClick={()=>setOpenedUserTab(true)}
-    >Users</button> */}
       <Header />
       <div
         style={{
@@ -84,7 +74,8 @@ const RoomPage = ({ user, socket, users }) => {
               padding: "1px",
               margin: "10px",
             }}
-            onClick={() => setOpenedUserTab(true)}
+            // onClick={() => setOpenedUserTab(true)}
+            onClick={() => setShowUserModal(true)}
           >
             Users
           </button>
@@ -104,8 +95,15 @@ const RoomPage = ({ user, socket, users }) => {
         </div>
       </div>
 
+      <Modal
+        showUserModal={showUserModal}
+        setShowUserModal={setShowUserModal}
+        users={users}
+        user={user}
+      />
+
       {openedUserTab && (
-        <Users users={users} setOpenedUserTab={setOpenedUserTab} user={user}/>
+        <Users users={users} setOpenedUserTab={setOpenedUserTab} user={user} />
       )}
 
       {openedChatTab && (
