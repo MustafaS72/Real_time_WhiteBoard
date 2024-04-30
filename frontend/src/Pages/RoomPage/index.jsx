@@ -24,6 +24,7 @@ const RoomPage = ({ user, socket, users }) => {
     };
   }, []);
 
+  //undo functionality
   const undo = () => {
     setHistory((prevHistory) => [
       ...prevHistory,
@@ -34,6 +35,7 @@ const RoomPage = ({ user, socket, users }) => {
     );
   };
 
+// redo functionality
   const redo = () => {
     setElements((prevElements) => [
       ...prevElements,
@@ -41,6 +43,8 @@ const RoomPage = ({ user, socket, users }) => {
     ]);
     setHistory((prevHistory) => prevHistory.slice(0, prevHistory.length - 1));
   };
+
+
   const handleClearCanvas = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
@@ -112,9 +116,9 @@ const RoomPage = ({ user, socket, users }) => {
       {/* <h1 className="text-center py-4 ">CollaborateBoard <span className="text-primary">[Users Online:{users.length}]</span></h1> */}
 
       {user && user.presenter && (
-        <div className="col-md-9 mx-auto px-5 mb-3 d-flex align-items-center justify-content-around">
-          <div className="d-flex col-md-2 justify-content-center gap-1">
-            <div className="d-flex gap-1">
+        <div className="main_bar">
+          <div className="drawing_shapes">
+            <div className="drawshape">
               <label htmlFor="pencil">Pencil</label>
               <input
                 type="radio"
@@ -126,7 +130,7 @@ const RoomPage = ({ user, socket, users }) => {
               />
             </div>
 
-            <div className="d-flex gap-1">
+            <div className="drawshape">
               <label htmlFor="line">Line</label>
               <input
                 type="radio"
@@ -138,8 +142,8 @@ const RoomPage = ({ user, socket, users }) => {
               />
             </div>
 
-            <div className="d-flex gap-1">
-              <label htmlFor="rect">Rectangle</label>
+            <div className="drawshape">
+              <label htmlFor="rect">Rectangle </label>
               <input
                 type="radio"
                 name="tool"
@@ -150,8 +154,9 @@ const RoomPage = ({ user, socket, users }) => {
               />
             </div>
           </div>
-          <div className="col-md-2 mx-auto">
-            <div className="d-flex align-items-center justify-content-center">
+
+          
+            <div className="select_color_div">
               <label htmlFor="color">Select Color:</label>
               <input
                 type="color"
@@ -161,18 +166,18 @@ const RoomPage = ({ user, socket, users }) => {
                 onChange={(e) => setColor(e.target.value)}
               />
             </div>
-          </div>
+          
 
-          <div className="col-md-3 d-flex gap-2">
+          <div className="URbutton">
             <button
-              className="btn btn-primary mt-1"
+              className="undobtn"
               disabled={elements.length === 0}
               onClick={() => undo()}
             >
               Undo
             </button>
             <button
-              className="btn btn-outline-primary mt-1"
+              className="redobtn"
               disabled={history.length < 1}
               onClick={() => redo()}
             >
@@ -180,15 +185,22 @@ const RoomPage = ({ user, socket, users }) => {
             </button>
           </div>
 
-          <div className="col-md-2">
+          <div className="clearCanvasbtn">
             <button className="btn btn-danger" onClick={handleClearCanvas}>
               Clear Canvas
             </button>
           </div>
+         
+          <div className="createNotebtn">
+            <button className="btn btn-info" onClick={handleClearCanvas}>
+              Create Note
+            </button>
+          </div>
+
         </div>
       )}
 
-      <div className="col-md-9 mx-auto mt-3 canvas-box">
+      <div className="col-md-10 mx-auto mt-3 canvas-box">
         <Whiteboard
           canvasRef={canvasRef}
           ctxRef={ctxRef}

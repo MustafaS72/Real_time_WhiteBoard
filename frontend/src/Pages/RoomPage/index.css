@@ -32,3 +32,50 @@
 .button-35:hover {
   box-shadow: #121212 0 0 0 3px, transparent 0 0 0 0;
 }
+
+.main_bar{
+  width:80%;
+  height: 60px;
+  margin-left:120px;
+  margin-right: 50px;
+  display: flex;
+}
+.drawing_shapes{
+  display: flex;
+  height: 100%;
+  width: 30%;
+}
+.drawshape{
+  margin:5px
+}
+.select_color_div{
+   width: 20%;
+}
+.URbutton{
+  width: 15%
+}
+.undobtn{
+  background-color: blue;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 5px;
+  margin: 2px;
+  border: 2px solid black;
+}
+.redobtn{
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 5px;
+ background-color: rgb(255, 255, 255);
+ border: 2px solid black;
+}
+.clearCanvasbtn{
+  margin-left: 10px;
+  margin: 5px;
+}
+.createNotebtn{
+  margin: 5px;
+}
+
