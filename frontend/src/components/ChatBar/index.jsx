@@ -4,13 +4,18 @@ import { LuSend } from "react-icons/lu";
 
 const Chat = ({ setOpenedChatTab, socket }) => {
   const [chat, setChat] = useState(() => {
-    const storedChats = localStorage.getItem("chats");
-    return storedChats ? JSON.parse(storedChats) : [];
-  });  const [message, setMessage] = useState("");
-  console.log("local storage", localStorage.getItem("chats"));
-  console.log("chat", chat);
+    const storedChat = sessionStorage.getItem("chat");
+    return storedChat ? JSON.parse(storedChat) : [];
+  });
+   const [message, setMessage] = useState("");
+  // console.log("local storage", localStorage.getItem("chats"));
+  // console.log("chat", chat);
   
-console.log("Chat component");
+
+
+
+  
+ //console.log("Chat component");
   useEffect(() => {
     socket.on("messageResponsesent", (data) => {
       //alert("jisna mess bheja uska nmae")
@@ -20,13 +25,15 @@ console.log("Chat component");
     });
   }, []);
 
+  useEffect(() => {
+    sessionStorage.setItem("chat", JSON.stringify(chat));
+  }, [chat]);
+
   const handlesubmit = (e) => {
     e.preventDefault();
     if (message.trim() !== "") {
-      const newMessage = { message, name: "You" }; // Create message object
-      setChat((prevChats) => [...prevChats, newMessage]); // Update chat state
-      localStorage.setItem("chats", JSON.stringify([...chat, newMessage])); // Store in local storage
-      socket.emit("message", newMessage); // Emit message to socket server
+      setChat((prevChats) => [...prevChats, { message, name: "You" }]); // Update chat state
+      socket.emit("message",{message})
       setMessage(""); // Clear message input
     }
   };
@@ -98,4 +105,4 @@ console.log("Chat component");
   );
 };
 
-export default memo(Chat);
+export default Chat;

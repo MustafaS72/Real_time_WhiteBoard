@@ -17,6 +17,7 @@ const RoomPage = ({ user, socket, users }) => {
   const [openedUserTab, setOpenedUserTab] = useState(false);
   const [openedChatTab, setOpenedChatTab] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
+  const[openedStickyTab,setOpenedStikcyTab]=useState(false);
 
   useEffect(() => {
     return () => {
@@ -192,7 +193,7 @@ const RoomPage = ({ user, socket, users }) => {
           </div>
          
           <div className="createNotebtn">
-            <button className="btn btn-info" onClick={handleClearCanvas}>
+            <button className="btn btn-info"   onClick={() => setOpenedStikcyTab(true)}>
               Create Note
             </button>
           </div>
@@ -210,6 +211,7 @@ const RoomPage = ({ user, socket, users }) => {
           color={color}
           user={user}
           socket={socket}
+          setOpenedStikcyTab={setOpenedStikcyTab}
         />
       </div>
     </div>

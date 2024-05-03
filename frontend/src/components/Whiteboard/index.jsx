@@ -9,7 +9,8 @@ const whiteboard = ({canvasRef,
   tool,
   color,
   user,
-  socket
+  socket,
+  setOpenedStikcyTab
 }) => {
 
   const[img,setImg]=useState(null)
