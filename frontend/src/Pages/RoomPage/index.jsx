@@ -17,7 +17,20 @@ const RoomPage = ({ user, socket, users }) => {
   const [openedUserTab, setOpenedUserTab] = useState(false);
   const [openedChatTab, setOpenedChatTab] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
-  const[openedStickyTab,setOpenedStikcyTab]=useState(false);
+  const [openedStickyTab, setOpenedStikcyTab] = useState(false);
+  const [newNoteToAdd, setNewNoteToAdd] = useState(null);
+  const [notes, setNotes] = useState([]);
+
+  const colors = [
+    "red",
+    "green",
+    "blue",
+    "yellow",
+    "orange",
+    "purple",
+    "#fcb8b3",
+    "#b3fcc4",
+  ];
 
   useEffect(() => {
     return () => {
@@ -36,7 +49,7 @@ const RoomPage = ({ user, socket, users }) => {
     );
   };
 
-// redo functionality
+  // redo functionality
   const redo = () => {
     setElements((prevElements) => [
       ...prevElements,
@@ -44,7 +57,6 @@ const RoomPage = ({ user, socket, users }) => {
     ]);
     setHistory((prevHistory) => prevHistory.slice(0, prevHistory.length - 1));
   };
-
 
   const handleClearCanvas = () => {
     const canvas = canvasRef.current;
@@ -57,6 +69,34 @@ const RoomPage = ({ user, socket, users }) => {
       canvasRef.current.height
     );
     setElements([]);
+  };
+
+  const handleColorChange = (color) => {
+    console.log("color", color, notes);
+    document.body.style.cursor = "crosshair";
+    setNewNoteToAdd({
+      text: "Hatim Dahi ",
+      color: color,
+    });
+  };
+
+  const handleClickOnWhiteboard = (e) => {
+    document.body.style.cursor = "auto";
+    const x = e.clientX;
+    const y = e.clientY;
+    console.log("x-", x, "Y-", y);
+    if (newNoteToAdd) {
+      console.log("newNoteToAdd", newNoteToAdd);
+      setNotes([
+        ...notes,
+        {
+          ...newNoteToAdd,
+          x: x,
+          y: y,
+        },
+      ]);
+      setNewNoteToAdd(null);
+    }
   };
   return (
     <div className="row">
@@ -156,18 +196,16 @@ const RoomPage = ({ user, socket, users }) => {
             </div>
           </div>
 
-          
-            <div className="select_color_div">
-              <label htmlFor="color">Select Color:</label>
-              <input
-                type="color"
-                id="color"
-                className="mt-1 ms-3"
-                value={color}
-                onChange={(e) => setColor(e.target.value)}
-              />
-            </div>
-          
+          <div className="select_color_div">
+            <label htmlFor="color">Select Color:</label>
+            <input
+              type="color"
+              id="color"
+              className="mt-1 ms-3"
+              value={color}
+              onChange={(e) => setColor(e.target.value)}
+            />
+          </div>
 
           <div className="URbutton">
             <button
@@ -191,17 +229,53 @@ const RoomPage = ({ user, socket, users }) => {
               Clear Canvas
             </button>
           </div>
-         
-          <div className="createNotebtn">
-            <button className="btn btn-info"   onClick={() => setOpenedStikcyTab(true)}>
+
+          <div className="createNotebtn" style={{ position: "relative" }}>
+            <button
+              className="btn btn-info"
+              onClick={() => setOpenedStikcyTab((prev) => !prev)}
+            >
               Create Note
             </button>
+            {openedStickyTab && (
+              <div
+                style={{
+                  position: "absolute",
+                  border: "1px solid black",
+                  backgroundColor: "white",
+                  width: "170px",
+                  height: "100px",
+                  left: "0px",
+                  top: "40px",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                }}
+              >
+                {colors.map((color, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      backgroundColor: color,
+                      width: "30px",
+                      height: "30px",
+                      margin: "5px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => handleColorChange(color)}
+                  ></div>
+                ))}
+              </div>
+            )}
           </div>
-
         </div>
       )}
 
-      <div className="col-md-10 mx-auto mt-3 canvas-box">
+      <div
+        className="col-md-10 mx-auto mt-3 canvas-box"
+        style={{ display: "flex" }}
+        onClick={handleClickOnWhiteboard}
+      >
         <Whiteboard
           canvasRef={canvasRef}
           ctxRef={ctxRef}
@@ -211,7 +285,7 @@ const RoomPage = ({ user, socket, users }) => {
           color={color}
           user={user}
           socket={socket}
-          setOpenedStikcyTab={setOpenedStikcyTab}
+          notes={notes}
         />
       </div>
     </div>

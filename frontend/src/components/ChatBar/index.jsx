@@ -12,8 +12,6 @@ const Chat = ({ setOpenedChatTab, socket }) => {
   // console.log("chat", chat);
   
 
-
-
   
  //console.log("Chat component");
   useEffect(() => {
